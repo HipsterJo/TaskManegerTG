@@ -1,3 +1,4 @@
+import sqlite3
 from ctypes import resize
 from datetime import date
 from email import message
@@ -21,6 +22,7 @@ Token = '1952198904:AAFC6hGtWaNDF8uMrZJwoVkQMZz-EVa6NbQ'
 today = datetime.now()
 
 
+
 bot = Bot(token=Token)
 dp = Dispatcher(bot, storage=MemoryStorage())
 
@@ -36,6 +38,10 @@ changeDate_keyboard = Keyboards.get_changeDate_keyboard()
 @dp.message_handler(commands=['start'])
 async def process_start_command(message: types.Message):    
     await message.reply("Начинаем!", reply_markup=main_keyboard)
+    with sqlite3.connect('db/database.db') as db:
+        cursor = db.cursor()
+        query = """ CREATE TABLE IF NOT EXISTS info(id TEXT, numbertask INTEGER)"""
+        cursor.execute(query)
 
 #Создаем запись
 @dp.message_handler(Text(equals = ('Создать запись')))
@@ -85,4 +91,5 @@ async def answer_q1(message:types.Message,state: FSMContext):
      
 
 if __name__ == '__main__':
-    executor.start_polling(dp,) 
+    executor.start_polling(dp) 
+    
