@@ -1,3 +1,4 @@
+from cgitb import text
 import sqlite3
 from ctypes import resize
 from datetime import date
@@ -40,8 +41,12 @@ async def process_start_command(message: types.Message):
     await message.reply("Начинаем!", reply_markup=main_keyboard)
     with sqlite3.connect('db/database.db') as db:
         cursor = db.cursor()
-        query = """ CREATE TABLE IF NOT EXISTS info(id TEXT, numbertask INTEGER)"""
-        cursor.execute(query)
+        id_user = str(message.from_user.id)
+       
+        print(id_user)
+    
+        cursor.execute(' INSERT INTO info (id, numbertask) VALUES('+id_user+', 1); ')
+        db.commit
 
 #Создаем запись
 @dp.message_handler(Text(equals = ('Создать запись')))
