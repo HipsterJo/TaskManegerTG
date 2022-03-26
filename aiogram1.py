@@ -17,6 +17,8 @@ from keyboards import Task, Keyboards
 from States import Test
 from Check_fun import check_time
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
+from CreateDBTAble import createTable,checkUser, createNewUser
+
 
 Token = '1952198904:AAFC6hGtWaNDF8uMrZJwoVkQMZz-EVa6NbQ'
 
@@ -26,8 +28,8 @@ today = datetime.now()
 
 bot = Bot(token=Token)
 dp = Dispatcher(bot, storage=MemoryStorage())
-
 new_task = Task() 
+createTable()
 
 
 main_keyboard = Keyboards.get_main_keyboard()
@@ -39,20 +41,13 @@ changeDate_keyboard = Keyboards.get_changeDate_keyboard()
 @dp.message_handler(commands=['start'])
 async def process_start_command(message: types.Message):    
     await message.reply("Начинаем!", reply_markup=main_keyboard)
-    with sqlite3.connect('db/database.db') as db:
-        cursor = db.cursor()
-        id_user = str(message.from_user.id)
-       
-        print(id_user)
-    
-        cursor.execute(' INSERT INTO info (id, numbertask) VALUES('+id_user+', 1); ')
-        db.commit
-
+    us_id = int(message.from_user.id)
+    checkUser(us_id)
+   
 #Создаем запись
 @dp.message_handler(Text(equals = ('Создать запись')))
 async def nav_cal_handler(message: Message):
     await message.answer("Please select a date: ", reply_markup=await SimpleCalendar().start_calendar())
-
 
 
 # simple calendar usage
