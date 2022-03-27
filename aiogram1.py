@@ -57,8 +57,7 @@ async def process_simple_calendar(callback_query: CallbackQuery, callback_data: 
     selected, date = await SimpleCalendar().process_selection(callback_query, callback_data)
     if selected:
         await callback_query.message.edit_text(
-            f'You selected {date.strftime("%d/%m/%Y")}' 
-            
+            f'You selected {date.strftime("%d/%m/%Y")}'  
         )
         await callback_query.message.answer('Введите временной промежуток:')
         await Test.timing.set()

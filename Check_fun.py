@@ -1,12 +1,19 @@
-
+from tabnanny import check
+from keyboards import Task
+import datetime
+from datetime import datetime, timedelta
 #Считываем часы
-def check_time(str):
+def check_time(str, tsk):
     StartTime = str.split('-')[0]
     EndTime = str.split('-')[1]
-    check_minute(StartTime)
+    beginTime = check_minute(StartTime)
+    deadlineTime = check_minute(EndTime)
     print('---------------')
-    print(StartTime)
-    print('\n' + EndTime)
+    print(beginTime)
+    print('\n' + deadlineTime)
+    tsk.time = tsk.date + beginTime
+    tsk.deadlineTime = tsk.deadlineTime + deadlineTime
+    
 #Выделяем минуты и часы
 def check_minute(str):
     if (':' in str):
@@ -14,3 +21,7 @@ def check_minute(str):
         minute = str.split(':')[1]
         print(hour)
         print('\n' +  minute)
+        return(timedelta(0,0,0,0,int(minute), int(hour)))    
+    else:
+        return(timedelta(0,0,0,0,0,int(str),0))
+            

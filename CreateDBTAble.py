@@ -19,29 +19,37 @@ def createTable():
             task_id INTEGER,
             task_status INTEGER,
             deadline INTEGER,
-            date INTEGER
+            date INTEGER,
+            countTask INTEGER
         )"""
         cursor.execute(query)
         db.commit  
 
+#бесполезная херь
 def checkUser(id_us):
     with sqlite3.connect('db/database.db') as db:
         cursor = db.cursor()
         query ="""SELECT user_id FROM tasks"""
         cursor.execute(query)
         for res in cursor:
-            if (res[1] == id_us):
+            if (res[0] == id_us):
+                print('Нашел')
                 return TRUE
         else:
-            print('Имя пользователя не было найдено в БД. Пользватель добавлен') 
-            createNewUser(id_us)
+            print('Имя пользователя не было найдено в БД') 
+            #createNewUser(id_us)
             
             
-
+#бесполезная херь
 def createNewUser(id_us):
     with sqlite3.connect('db/database.db') as db:
         cursor = db.cursor()
-        cursor.execute(' INSERT INTO tasks (user_id, task_id, task_status, deadline, date) VALUES('+str(id_us)+', 0, 0 , 0, 0); ')
+        cursor.execute(' INSERT INTO tasks (user_id, task_id, task_status, deadline, date, countTask) VALUES('+str(id_us)+', 0, 0 , 0, 0); ')
         print('Мы тут')
         db.commit  
 
+#передаем объект класса task
+def createTask(tsk):
+    with sqlite3.connect('db/database.db') as db:
+        cursor = db.cursor()
+        cursor.execute()  
