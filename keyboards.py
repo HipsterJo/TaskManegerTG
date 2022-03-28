@@ -21,6 +21,7 @@ class Task(object):
          self.time = time(0,0)
          self.deadlineDate = date(2022,1,1)
          self.deadlineTime = time(0,0)
+         self.note = ''
      def complete(self):
           self.complete = True    
 

@@ -5,7 +5,11 @@ from datetime import datetime, timedelta, time, date
 #Считываем часы
 def check_time(str, tsk: Task, ):
     StartTime = str.split('-')[0]
+    print('________')
+    print(StartTime)
     EndTime = str.split('-')[1]
+    
+    print('________')
     beginTime = check_minute(StartTime)
     deadlineTime = check_minute(EndTime)
     print('---------------')

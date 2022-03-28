@@ -17,7 +17,7 @@ from keyboards import Task, Keyboards
 from States import Test
 from Check_fun import check_time
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
-from CreateDBTAble import createTable,checkUser, createNewUser
+from CreateDBTAble import createTable,checkUser, createNewUser, createTask
 
 
 Token = '1952198904:AAFC6hGtWaNDF8uMrZJwoVkQMZz-EVa6NbQ'
@@ -68,7 +68,18 @@ async def process_simple_calendar(callback_query: CallbackQuery, callback_data: 
 async def answer_q1(message:types.Message,state: FSMContext):
     check_time(message.text, new_task)
     print('--------------------')
+    await message.answer('Чем вы будете заниматься? ')
+    await Test.note.set()
     print(message.text)
+
+@dp.message_handler(state = Test.note)
+async def answer_note(message: types.Message, state: FSMContext):
+    new_task.note = message.text
+    us_id = int(message.from_user.id)
+    createTask(new_task, us_id)
+
+    
+
 
 #@dp.callback_query_handler(Text(startswith=('hour')))
 #async def hour(call: types.CallbackQuery):
