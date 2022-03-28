@@ -66,7 +66,7 @@ async def process_simple_calendar(callback_query: CallbackQuery, callback_data: 
         
 @dp.message_handler(state=Test.timing)
 async def answer_q1(message:types.Message,state: FSMContext):
-    check_time(message.text)
+    check_time(message.text, new_task)
     print('--------------------')
     print(message.text)
 
