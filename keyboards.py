@@ -1,4 +1,5 @@
 from tkinter.ttk import Button
+from venv import create
 from aiogram import Bot, types
 from aiogram.dispatcher import Dispatcher
 from aiogram.utils import executor
@@ -13,6 +14,11 @@ from numpy import meshgrid
 
 today = datetime.now()
 
+
+def create_buttons(id_tasks):
+        Button1 = InlineKeyboardButton('Закончил', callback_data= 'Fin_' + str(id_tasks))
+        Button2 = InlineKeyboardButton('Отложить', callback_data= 'Def_' + str(id_tasks))
+        return Button1,Button2
 #Класс "Задача"
 class Task(object):
     
@@ -35,6 +41,17 @@ class Keyboards:
         main_keybord.add(button_create_task).add(button_list_of_tasks)
         
         return main_keybord
+    def get_show_task_keyboard():
+        show_task_keyboard = ReplyKeyboardMarkup(resize_keyboard=True)
+        button_today = KeyboardButton('На сегодня')
+        button_next3 = KeyboardButton('На 3 дня')
+        button_next7 = KeyboardButton('На 7 дня')
+        button_next30 = KeyboardButton('На 30 дней')
+        button_cancel = KeyboardButton('Назад')
+        show_task_keyboard.row(button_today, button_next3)
+        show_task_keyboard.row(button_next7,button_next30)
+        show_task_keyboard.row(button_cancel)
+        return show_task_keyboard
     def get_changeDate_keyboard():
         changeDate_keyboard = ReplyKeyboardMarkup(resize_keyboard=True)
         button_chageDate = KeyboardButton('Изменить дату задачи')
@@ -42,6 +59,21 @@ class Keyboards:
         changeDate_keyboard.add(button_chageDate).add(button_changeTime)
         
         return changeDate_keyboard
+
+#___________Клавиатура для ответа на карточки______________________
+
+
+    def create_answer_keyboard(id_task):
+        answer_keyboard = InlineKeyboardMarkup()
+        ButtonFinish, ButtonDefer = create_buttons(id_task)
+        answer_keyboard.row(ButtonDefer, ButtonFinish)
+        return answer_keyboard
+
+
+    
+
+
+
     #Клавиатура с часами
 #    def get_time_keyboard():
 #        time_keyboard  = InlineKeyboardMarkup()
