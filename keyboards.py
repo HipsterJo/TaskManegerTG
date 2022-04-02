@@ -19,6 +19,13 @@ def create_buttons(id_tasks):
         Button1 = InlineKeyboardButton('Закончил', callback_data= 'Fin_' + str(id_tasks))
         Button2 = InlineKeyboardButton('Отложить', callback_data= 'Def_' + str(id_tasks))
         return Button1,Button2
+
+def create_buttons_defer(id_tasks):
+        Button1 = InlineKeyboardButton('На 30мин', callback_data= 'Che_1800_' + str(id_tasks))
+        Button2 = InlineKeyboardButton('На 2часа', callback_data= 'Che_7200_' + str(id_tasks))
+        Button3 = InlineKeyboardButton('На 6часов', callback_data= 'Che_21600_' + str(id_tasks))
+        Button4 = InlineKeyboardButton('На 1день', callback_data= 'Che_86400_' + str(id_tasks))
+        return Button1,Button2, Button3, Button4
 #Класс "Задача"
 class Task(object):
     
@@ -60,7 +67,7 @@ class Keyboards:
         
         return changeDate_keyboard
 
-#___________Клавиатура для ответа на карточки______________________
+#___________Клавиатуры для ответа на карточки______________________
 
 
     def create_answer_keyboard(id_task):
@@ -69,7 +76,12 @@ class Keyboards:
         answer_keyboard.row(ButtonDefer, ButtonFinish)
         return answer_keyboard
 
-
+    def create_answer_keyboard_defer(id_task):
+        answer_keyboard_defer = InlineKeyboardMarkup()
+        Button30, Button2, Button6, Button1 = create_buttons_defer(id_task)
+        answer_keyboard_defer.row(Button30, Button2)
+        answer_keyboard_defer.row(Button6, Button1)
+        return answer_keyboard_defer
     
 
 

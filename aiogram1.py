@@ -18,7 +18,7 @@ from keyboards import Task, Keyboards, create_buttons
 from States import Test
 from Check_fun import check_time
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
-from CreateDBTAble import createTable,checkUser, createNewUser, createTask, show_curreny_task, text, task_complete
+from CreateDBTAble import createTable,checkUser, createNewUser, createTask, show_curreny_task, text, task_complete, defer_task
 
 Token = '1952198904:AAFC6hGtWaNDF8uMrZJwoVkQMZz-EVa6NbQ'
 
@@ -124,12 +124,21 @@ async def cancel_task(message:types.Message):
 async def FinishTask(call: types.CallbackQuery):
     id_task = int(call.data.split("_")[1])
     task_complete(id_task)
-
-
+    print(f'закончил задачу {id_task}')
+    await call.message.delete_reply_markup()
 #Если нажата кнопка отложить
 @dp.callback_query_handler(Text(startswith=('Def')))
 async def DeferTask(call: types.CallbackQuery):
     id_task = int(call.data.split("_")[1])
+    def_keyboard = Keyboards.create_answer_keyboard_defer(id_task)
+    await call.message.edit_reply_markup(def_keyboard)
+    print('Успешно')
+@dp.callback_query_handler(Text(startswith=('Che')))   
+async def Chege_data(call: types.CallbackQuery):
+    id_task = int(call.data.split("_")[2])
+    time_minute = int(call.data.split("_")[1])
+    defer_task(id_task, time_minute)
+    await call.message.delete_reply_markup()
 #_________________________________________________________________________-----
 #_______________________________________________________________________________________________________    
 #AFK код если вводить часы и  минуты через INLINe клавиатуры

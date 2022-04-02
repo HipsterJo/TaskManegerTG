@@ -107,4 +107,17 @@ def task_complete(id_task):
     with sqlite3.connect('db/database.db') as db:
         cursor = db.cursor()
         cursor.execute(f'UPDATE tasks SET task_status = 1 WHERE task_id = {id_task}')
-        db.commit
+        db.commit()
+
+def defer_task(id_task, ms):
+    with sqlite3.connect('db/database.db') as db:
+        cursor = db.cursor()
+        new_date_time = 0
+        new_deadline_time =0
+        cursor.execute(f'SELECT date, deadline FROM tasks WHERE task_id = {id_task}')
+        for res in cursor:
+            new_date_time = int(res[0]) + int(ms)
+            new_deadline_time = int(res[1]) + int(ms)
+        cursor.execute(f'UPDATE tasks SET date = {new_date_time} WHERE task_id = {id_task}')
+        cursor.execute(f'UPDATE tasks SET deadline = {new_deadline_time} WHERE task_id = {id_task}')
+        db.commit()
