@@ -1,9 +1,12 @@
+
+import asyncio
 from cgitb import text
+from pickle import TRUE
 import sqlite3
 from ctypes import resize
 from datetime import date
 from email import message
-from aiogram import Bot, types
+from aiogram import Bot, Dispatcher, executor, types
 from aiogram.dispatcher import Dispatcher, FSMContext
 from aiogram.utils import executor
 from aiogram.dispatcher.filters import Text
@@ -18,7 +21,11 @@ from keyboards import Task, Keyboards, create_buttons
 from States import Test
 from Check_fun import check_time
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
-from CreateDBTAble import createTable,checkUser, createNewUser, createTask, show_curreny_task, text, task_complete, defer_task
+from CreateDBTAble import createTable,checkUser, createNewUser, createTask, show_curreny_task, text, task_complete, defer_task, get_date, check_for_notifiection
+import schedule
+import threading
+import time
+
 
 Token = '1952198904:AAFC6hGtWaNDF8uMrZJwoVkQMZz-EVa6NbQ'
 
@@ -133,13 +140,14 @@ async def DeferTask(call: types.CallbackQuery):
     def_keyboard = Keyboards.create_answer_keyboard_defer(id_task)
     await call.message.edit_reply_markup(def_keyboard)
     print('Успешно')
+#Если нажато отлажить на ? мин    
 @dp.callback_query_handler(Text(startswith=('Che')))   
 async def Chege_data(call: types.CallbackQuery):
     id_task = int(call.data.split("_")[2])
     time_minute = int(call.data.split("_")[1])
     defer_task(id_task, time_minute)
     await call.message.delete_reply_markup()
-#_________________________________________________________________________-----
+#______________________________________________________________________________________________________
 #_______________________________________________________________________________________________________    
 #AFK код если вводить часы и  минуты через INLINe клавиатуры
 
@@ -160,8 +168,25 @@ async def Chege_data(call: types.CallbackQuery):
 #        print(new_task.time)
 
 
-     
+
+
+
+
+async def notifiection(sleep_for):
+    while True:
+        await asyncio.sleep(sleep_for)
+        all_tasks = []
+        all_tasks  = check_for_notifiection()
+        if (len(all_tasks) > 0):
+            for task in all_tasks:
+                temp_keyboard = Keyboards.create_answer_keyboard(task[3])
+                text = ('‼Напоминание‼\n'
+                    f'Дата выполнения:{get_date(task[0]).date()} - {get_date(task[1]).date()}\n'
+                    f'Время выполния: {get_date(task[0]).time()} - {get_date(task[1]).time()}\n'
+                    f'Дела: {task[2]}' )
+                await bot.send_message(task[4], text, reply_markup= temp_keyboard)
 
 if __name__ == '__main__':
-    executor.start_polling(dp) 
-    
+    loop = asyncio.get_event_loop()
+    loop.create_task(notifiection(60))
+    executor.start_polling(dp)

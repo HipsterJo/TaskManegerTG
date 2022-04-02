@@ -121,3 +121,18 @@ def defer_task(id_task, ms):
         cursor.execute(f'UPDATE tasks SET date = {new_date_time} WHERE task_id = {id_task}')
         cursor.execute(f'UPDATE tasks SET deadline = {new_deadline_time} WHERE task_id = {id_task}')
         db.commit()
+
+def check_for_notifiection():
+    now_in_sec = get_timestamp(datetime.datetime.now())
+    
+    with sqlite3.connect('db/database.db') as db:
+        cursor = db.cursor()
+        cursor.execute(f'SELECT date, deadline, notes, task_id, user_id FROM tasks WHERE task_status = 0')
+        tasks = []
+        for res in cursor:
+            if ((res[0] - now_in_sec < 60) and (res[0] - now_in_sec) > 0):
+                tasks.append(res)
+                print(res )
+        return tasks
+
+tasks = check_for_notifiection()
