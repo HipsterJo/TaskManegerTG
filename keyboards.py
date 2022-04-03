@@ -1,5 +1,4 @@
-from tkinter.ttk import Button
-from venv import create
+
 from aiogram import Bot, types
 from aiogram.dispatcher import Dispatcher
 from aiogram.utils import executor
