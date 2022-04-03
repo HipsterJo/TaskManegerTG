@@ -16,15 +16,12 @@ from aiogram.types import ReplyKeyboardRemove, \
 from aiogram.types import Message, CallbackQuery, ReplyKeyboardRemove, ReplyKeyboardMarkup    
 from datetime import datetime, time, timedelta
 from aiogram_calendar import simple_cal_callback, SimpleCalendar, dialog_cal_callback, DialogCalendar
-from numpy import equal
+
 from keyboards import Task, Keyboards, create_buttons
 from States import Test
 from Check_fun import check_time
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from CreateDBTAble import createTable,checkUser, createNewUser, createTask, show_curreny_task,  task_complete, defer_task, get_date, check_for_notifiection
-import schedule
-import threading
-import time
 
 
 Token = '1952198904:AAFC6hGtWaNDF8uMrZJwoVkQMZz-EVa6NbQ'

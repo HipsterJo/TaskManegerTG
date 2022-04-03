@@ -10,7 +10,7 @@ from aiogram.types import ReplyKeyboardRemove, \
 from aiogram.types import Message, CallbackQuery, ReplyKeyboardRemove, ReplyKeyboardMarkup    
 from datetime import datetime, date, time
 from aiogram_calendar import simple_cal_callback, SimpleCalendar, dialog_cal_callback, DialogCalendar
-from numpy import meshgrid
+
 
 today = datetime.now()
 
