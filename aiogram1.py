@@ -189,12 +189,13 @@ async def notifiection(sleep_for):
             for task in all_tasks:
                 temp_keyboard = Keyboards.create_answer_keyboard(task[3])
                 text = ('‼Напоминание‼\n'
-                    f'Дата выполнения:{get_date(task[0]).date()} - {get_date(task[1]).date()}\n'
+                    f'План на день:{get_date(task[0]).date()}\n'
                     f'Время выполния: {get_date(task[0]).time()} - {get_date(task[1]).time()}\n'
                     f'Дела: {task[2]}' )
                 await bot.send_message(task[4], text, reply_markup= temp_keyboard)
 
 if __name__ == '__main__':
-    loop = asyncio.get_event_loop()
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
     loop.create_task(notifiection(120))
     executor.start_polling(dp)
