@@ -21,7 +21,7 @@ from keyboards import Task, Keyboards, create_buttons
 from States import Test
 from Check_fun import check_time
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
-from CreateDBTAble import createTable,checkUser, createNewUser, createTask, show_curreny_task, text, task_complete, defer_task, get_date, check_for_notifiection
+from CreateDBTAble import createTable,checkUser, createNewUser, createTask, show_curreny_task,  task_complete, defer_task, get_date, check_for_notifiection
 import schedule
 import threading
 import time
@@ -49,7 +49,7 @@ show_task_keyboard = Keyboards.get_show_task_keyboard()
 #Старт программы
 @dp.message_handler(commands=['start'])
 async def process_start_command(message: types.Message):    
-    await message.reply(text, reply_markup=main_keyboard)
+    await message.reply('Начинаем', reply_markup=main_keyboard)
     us_id = int(message.from_user.id)
     checkUser(us_id)
 #-------------------------------------------------------------Создание записи---------------------------------------------------------   
@@ -78,7 +78,13 @@ async def process_simple_calendar(callback_query: CallbackQuery, callback_data: 
         
 @dp.message_handler(state=Test.timing)
 async def answer_q1(message:types.Message,state: FSMContext):
-    check_time(message.text, new_task)
+    try:
+        check_time(message.text, new_task)
+    except:
+        await message.answer('Неверный формат! Введите заново. Принимается вид: XX:XX-XX:XX')
+        await nav_cal_handler(message)
+        await state.reset_state()
+        return
     print('--------------------')
     await message.answer('Чем вы будете заниматься? ')
     await Test.note.set()
@@ -89,36 +95,38 @@ async def answer_note(message: types.Message, state: FSMContext):
     new_task.note = message.text
     us_id = int(message.from_user.id)
     if (createTask(new_task, us_id) == True):
+        await message.answer('Задача добавлена')
         await state.reset_state()
         
 #-----------------------------------------------Просмотр записей---------------------------------
+
+async def print_cards(message: types.Message, cards, id_tasks):
+    if (len(cards) > 0): 
+        for i in range(len(cards)):
+            temp_keyboard = Keyboards.create_answer_keyboard(id_tasks[i])
+            await message.answer(cards[i], reply_markup=temp_keyboard)
+    else:
+        await message.answer('Задачи не найдены') 
+
 @dp.message_handler(Text(equals=('Посмотреть записи')))
 async def active_notes(message: types.Message):
     await message.answer('Выберите временной промежуток: ', reply_markup= show_task_keyboard)
 @dp.message_handler(Text(equals = ('На сегодня')))
 async def today_tasks(message: types.Message):
     cards, id_tasks = show_curreny_task(1, message.from_user.id)
-    for i in range(len(cards)):
-        temp_keyboard = Keyboards.create_answer_keyboard(id_tasks[i])
-        await message.answer(cards[i], reply_markup=temp_keyboard)
+    await print_cards(message,cards, id_tasks)
 @dp.message_handler(Text(equals = ('На 3 дня'))) 
 async def day3_tasks(message: types.Message):
     cards, id_tasks = show_curreny_task(3, message.from_user.id)
-    for i in range(len(cards)):
-        temp_keyboard = Keyboards.create_answer_keyboard(id_tasks[i])
-        await message.answer(cards[i], reply_markup=temp_keyboard)
+    await print_cards(message,cards, id_tasks)
 @dp.message_handler(Text(equals = ('На 7 дней')))
 async def day7_tasks(message: types.Message):
     cards, id_tasks = show_curreny_task(7, message.from_user.id)
-    for i in range(len(cards)):
-        temp_keyboard = Keyboards.create_answer_keyboard(id_tasks[i])
-        await message.answer(cards[i], reply_markup=temp_keyboard)
+    await print_cards(message,cards, id_tasks)      
 @dp.message_handler(Text(equals = ('На 30 дней')))
 async def day30_tasks(message: types.Message):
     cards, id_tasks = show_curreny_task(30, message.from_user.id)
-    for i in range(len(cards)):
-        temp_keyboard = Keyboards.create_answer_keyboard(id_tasks[i])
-        await message.answer(cards[i], reply_markup=temp_keyboard)
+    await print_cards(message,cards, id_tasks)
 @dp.message_handler(Text(equals= ('Назад')))
 async def cancel_task(message:types.Message):
     await message.answer('Вы в глваном меню', reply_markup=main_keyboard)

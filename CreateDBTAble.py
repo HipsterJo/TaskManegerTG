@@ -96,7 +96,7 @@ def show_curreny_task(number,user_id):
         card= []
         id_tasks = []
         for res in cursor:
-            card.append (f'Дата выполнения:{get_date(res[1]).date()} - {get_date(res[0]).date()}\n'
+            card.append (f'План на день:{get_date(res[1]).date()}\n'
                          f'Время выполния: {get_date(res[1]).time()} - {get_date(res[0]).time()}\n'
                          f'Дела: {res[2]}' )
             id_tasks.append(res[3])
@@ -135,4 +135,3 @@ def check_for_notifiection():
                 print(res )
         return tasks
 
-tasks = check_for_notifiection()

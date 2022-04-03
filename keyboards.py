@@ -52,7 +52,7 @@ class Keyboards:
         show_task_keyboard = ReplyKeyboardMarkup(resize_keyboard=True)
         button_today = KeyboardButton('На сегодня')
         button_next3 = KeyboardButton('На 3 дня')
-        button_next7 = KeyboardButton('На 7 дня')
+        button_next7 = KeyboardButton('На 7 дней')
         button_next30 = KeyboardButton('На 30 дней')
         button_cancel = KeyboardButton('Назад')
         show_task_keyboard.row(button_today, button_next3)
