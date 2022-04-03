@@ -22,7 +22,7 @@ def get_date(tmstmp):
 def createTable():
     
       
-    with sqlite3.connect('db/database.db') as db:
+    with sqlite3.connect('database.db') as db:
         cursor = db.cursor()
         query = """CREATE TABLE IF NOT EXISTS tasks(
             user_id INTEGER,
@@ -38,7 +38,7 @@ def createTable():
 
 #бесполезная херь
 def checkUser(id_us):
-    with sqlite3.connect('db/database.db') as db:
+    with sqlite3.connect('database.db') as db:
         cursor = db.cursor()
         query ="""SELECT user_id FROM tasks"""
         cursor.execute(query)
@@ -53,14 +53,14 @@ def checkUser(id_us):
             
 #бесполезная херь
 def createNewUser(id_us):
-    with sqlite3.connect('db/database.db') as db:
+    with sqlite3.connect('database.db') as db:
         cursor = db.cursor()
         cursor.execute(' INSERT INTO tasks (user_id, task_id, task_status, deadline, date, countTask, note) VALUES('+str(id_us)+', 0, 0 , 0, 0,0, ''); ')
         print('Мы тут')
         db.commit()  
 
 def check_numberTask(id_us):
-    with sqlite3.connect('db/database.db') as db:
+    with sqlite3.connect('database.db') as db:
         cursor = db.cursor()
         query ="""SELECT user_id FROM tasks"""
         cursor.execute(query)
@@ -72,7 +72,7 @@ def check_numberTask(id_us):
 
 #передаем объект класса task
 def createTask(tsk: Task, us_id):
-    with sqlite3.connect('db/database.db') as db:
+    with sqlite3.connect('database.db') as db:
         cursor = db.cursor()
         #-------создаем уникальное id для задачи. В id пользователя дописываем количество его задач в целом------
         countTask = check_numberTask(us_id)
@@ -86,7 +86,7 @@ def createTask(tsk: Task, us_id):
 
 
 def show_curreny_task(number,user_id):
-    with sqlite3.connect('db/database.db') as db:
+    with sqlite3.connect('database.db') as db:
         cursor = db.cursor()
         #query = 'SELECT deadline, date, notes FROM tasks WHERE date < '+str(get_timestamp(datetime.datetime.now() + timedelta(number))),' AND user_id ='+ str(user_id)+'\''
         #datetime.combine(date.today() + timedelta(number),time(0,0))
@@ -104,13 +104,13 @@ def show_curreny_task(number,user_id):
 
 
 def task_complete(id_task):
-    with sqlite3.connect('db/database.db') as db:
+    with sqlite3.connect('database.db') as db:
         cursor = db.cursor()
         cursor.execute(f'UPDATE tasks SET task_status = 1 WHERE task_id = {id_task}')
         db.commit()
 
 def defer_task(id_task, ms):
-    with sqlite3.connect('db/database.db') as db:
+    with sqlite3.connect('database.db') as db:
         cursor = db.cursor()
         new_date_time = 0
         new_deadline_time =0
@@ -125,7 +125,7 @@ def defer_task(id_task, ms):
 def check_for_notifiection():
     now_in_sec = get_timestamp(datetime.datetime.now())
     
-    with sqlite3.connect('db/database.db') as db:
+    with sqlite3.connect('database.db') as db:
         cursor = db.cursor()
         cursor.execute(f'SELECT date, deadline, notes, task_id, user_id FROM tasks WHERE task_status = 0')
         tasks = []

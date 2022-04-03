@@ -1,4 +1,3 @@
 asyncio
 datetime
 aiogram
-sqlite3
