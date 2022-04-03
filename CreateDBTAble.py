@@ -130,7 +130,7 @@ def check_for_notifiection():
         cursor.execute(f'SELECT date, deadline, notes, task_id, user_id FROM tasks WHERE task_status = 0')
         tasks = []
         for res in cursor:
-            if ((res[0] - now_in_sec < 60) and (res[0] - now_in_sec) > 0):
+            if ((res[0] - now_in_sec < 120) and (res[0] - now_in_sec) > 0):
                 tasks.append(res)
                 print(res )
         return tasks

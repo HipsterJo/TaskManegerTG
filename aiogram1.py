@@ -75,13 +75,13 @@ async def process_simple_calendar(callback_query: CallbackQuery, callback_data: 
         
 @dp.message_handler(state=Test.timing)
 async def answer_q1(message:types.Message,state: FSMContext):
-    try:
-        check_time(message.text, new_task)
-    except:
-        await message.answer('Неверный формат! Введите заново. Принимается вид: XX:XX-XX:XX')
-        await nav_cal_handler(message)
-        await state.reset_state()
-        return
+   # try:
+    check_time(message.text, new_task)
+    #except:
+    #    await message.answer('Неверный формат! Введите заново. Принимается вид: XX:XX-XX:XX')
+    #    await nav_cal_handler(message)
+    #    await state.reset_state()
+    #    return
     print('--------------------')
     await message.answer('Чем вы будете заниматься? ')
     await Test.note.set()
@@ -89,10 +89,13 @@ async def answer_q1(message:types.Message,state: FSMContext):
 
 @dp.message_handler(state = Test.note)
 async def answer_note(message: types.Message, state: FSMContext):
+    global new_task
     new_task.note = message.text
     us_id = int(message.from_user.id)
     if (createTask(new_task, us_id) == True):
         await message.answer('Задача добавлена')
+        
+        new_task= Task()
         await state.reset_state()
         
 #-----------------------------------------------Просмотр записей---------------------------------
@@ -193,5 +196,5 @@ async def notifiection(sleep_for):
 
 if __name__ == '__main__':
     loop = asyncio.get_event_loop()
-    loop.create_task(notifiection(60))
+    loop.create_task(notifiection(120))
     executor.start_polling(dp)
